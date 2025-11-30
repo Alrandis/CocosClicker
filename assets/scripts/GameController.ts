@@ -10,6 +10,9 @@ export class GameController extends Component {
     public clickerNode: Node | null = null;
 
     private score: number = 0; // Обычная переменная счета
+    clickPower = 1; 
+    autoIncome = 0; 
+    time = 0;            // таймер для авто-инкома
 
     // --- МЕТОДЫ ЖИЗНЕННОГО ЦИКЛА ---
 
@@ -24,13 +27,22 @@ export class GameController extends Component {
         this.updateScoreUI();
     }
 
+    update(deltaTime) {
+        // Пассивный доход
+        if (this.autoIncome > 0) {
+            this.time += deltaTime;
+            if (this.time >= 1) {
+                this.score += this.autoIncome;
+                this.updateScoreUI();
+                this.time = 0;
+            }
+        }
+    }
+
     // Метод, который вызывается при клике
     private onClick() {
         // 1. Увеличиваем счет
-        this.score++;
-
-        // 2. Обновляем текст
-        this.updateScoreUI();
+        this.addScore();
 
         // 3. Запускаем анимацию (Tween)
         this.playBounceAnimation();
@@ -40,6 +52,20 @@ export class GameController extends Component {
         if (this.scoreLabel) {
             this.scoreLabel.string = this.score.toString();
         }
+    }
+
+    public getScore() {
+        return this.score;
+    }
+
+    public addScore() {
+        this.score += this.clickPower;
+        this.updateScoreUI();
+    }
+
+    public minusScore(amount) {
+        this.score -= amount;
+        this.updateScoreUI();
     }
 
     // --- АНИМАЦИЯ (Tweening) ---
