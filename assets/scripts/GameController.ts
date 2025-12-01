@@ -82,8 +82,8 @@ export class GameController extends Component {
     }
 
     // Важно отписываться от событий, если объект уничтожается, хотя при смене сцен движок чистит сам.
-    protected onDestroy(): void {
-        if (this.clickerNode) {
+    protected onDisable() {
+        if (this.clickerNode?.isValid) {
             this.clickerNode.off(Node.EventType.TOUCH_START, this.onClick, this);
         }
     }
